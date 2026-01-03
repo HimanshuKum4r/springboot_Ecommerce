@@ -1,9 +1,19 @@
 package com.ecommerce.sb.model;
 
-import java.util.Optional;
+import jakarta.persistence.*;
 
+import java.util.Optional;
+@Entity(name =  "categories") //tabla name
 public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long categoryId;
+    //for mysql database
+//      @GeneratedValue(strategy = GenerationType.SEQUENCE , generator = "order_sequence")//for psotgressql
+//      @SequenceGenerator(name = "order_seq", sequenceName = "order_sequence",allocationSize = 1)
+      //marked as primary key
+//    @Version
+//    private Integer version;
     private String categoryName;
 
     public Category(String categoryName, Long categoryId) {
@@ -11,6 +21,10 @@ public class Category {
         this.categoryName = categoryName;
 
     }
+
+    public Category() {
+    }
+
     public Long getCategoryId() {
 
         return categoryId;
