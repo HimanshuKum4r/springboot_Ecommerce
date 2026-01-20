@@ -1,9 +1,17 @@
 package com.ecommerce.sb.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
-import java.util.Optional;
-@Entity(name =  "categories") //tabla name
+
+@Entity(name =  "categories")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
@@ -14,33 +22,36 @@ public class Category {
       //marked as primary key
 //    @Version
 //    private Integer version;
+
+    @NotEmpty(message = "must not be blank")
+    @Size(min = 5 ,message = "atleast 5 character")
     private String categoryName;
 
-    public Category(String categoryName, Long categoryId) {
-        this.categoryId = categoryId;
-        this.categoryName = categoryName;
+//    public Category(String categoryName, Long categoryId) {
+//        this.categoryId = categoryId;
+//        this.categoryName = categoryName;
+//
+//    }
+//
+//    public Category() {
+//    }
 
-    }
-
-    public Category() {
-    }
-
-    public Long getCategoryId() {
-
-        return categoryId;
-
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
+//    public Long getCategoryId() {
+//
+//        return categoryId;
+//
+//    }
+//
+//    public void setCategoryId(Long categoryId) {
+//        this.categoryId = categoryId;
+//    }
+//    public String getCategoryName() {
+//        return categoryName;
+//    }
+//
+//    public void setCategoryName(String categoryName) {
+//        this.categoryName = categoryName;
+//    }
 
 
 }
