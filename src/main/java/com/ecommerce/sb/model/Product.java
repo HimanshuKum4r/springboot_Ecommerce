@@ -20,9 +20,9 @@ public class Product {
     private String productName;
     private Integer quantity;
     private String description;
-    private Double price;
+    private double price;
     private String image;
-    private Double Discount;
+    private double Discount;
     private  Double specialPrice;
 
     @ManyToOne

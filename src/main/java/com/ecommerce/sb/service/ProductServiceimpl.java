@@ -31,10 +31,10 @@ public class ProductServiceimpl implements ProductService{
 
         product.setImage("default image");
         product.setCategory(category);
-        double specialPrice = product.getPrice() - ((product.getDiscount()*0.01)* product.getPrice());
+        Double specialPrice = product.getPrice() - ((product.getDiscount() * 0.01)* product.getPrice());
         product.setSpecialPrice(specialPrice);
 
-         Product savedproduct = productRepository.save(product);
+        Product savedproduct = productRepository.save(product);
 
         return modelMapper.map(savedproduct,ProductDTO.class);
     }
@@ -43,11 +43,46 @@ public class ProductServiceimpl implements ProductService{
     public ProductResponse getAllProducts() {
 
         List<Product> products = productRepository.findAll();
+        if (products.isEmpty()) {
+            throw new ResourceNotFoundException("no categoreiss");
+        }
         List<ProductDTO> productDTOList = products.stream().map(product -> modelMapper.map(product,ProductDTO.class)).toList();
 
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOList);
 
         return productResponse;
+    }
+
+    @Override
+    public ProductResponse searchByCategory(Long categoryId) {
+
+        Category optionalcatgeory = categoryRepository.findById(categoryId)
+                .orElseThrow(()->new ResourceNotFoundException("Resource Not Found with id "));
+
+        List<Product> products = productRepository.findByCategoryOrderByPriceAsc(optionalcatgeory);
+        if (products.isEmpty()) {
+            throw new ResourceNotFoundException("No products in this Category");
+        }
+
+        List<ProductDTO> productDTOList = products.stream().map(product -> modelMapper.map(product,ProductDTO.class)).toList();
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setCategory(categoryRepository.findById(categoryId));
+        productResponse.setContent(productDTOList);
+
+        return productResponse;
+    }
+
+    @Override
+    public ProductResponse searchByKeyword(String keyword) {
+            List<Product> products = productRepository.findByProductNameLikeIgnoreCase('%'+keyword + '%');
+
+            List<ProductDTO> productDTOList = products.stream()
+                    .map(product -> modelMapper.map(product,ProductDTO.class)).toList();
+
+            ProductResponse productResponse = new ProductResponse();
+            productResponse.setContent(productDTOList);
+
+            return productResponse;
     }
 }
