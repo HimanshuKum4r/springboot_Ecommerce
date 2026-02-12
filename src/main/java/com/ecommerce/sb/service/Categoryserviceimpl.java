@@ -55,7 +55,7 @@ public class Categoryserviceimpl implements CategoryService {
         Category category = modelMapper.map(categorydtoreq,Category.class);
         Category savedcategory = categoryRepository.findByCategoryName(category.getCategoryName());
         if(savedcategory != null)
-            throw new UserAlreadyExistException("user already exist");
+            throw new UserAlreadyExistException("category already exist");
           Category c = categoryRepository.save(category);
 
           return modelMapper.map(c,CategoryDTO.class);

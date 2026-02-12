@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +38,13 @@ public class MyGlobalExceptionHandler {
 
         return ResponseEntity.status(ex.getStatus()).body(ressponse);
 
+    }
+
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<String> IOException(IOException ex){
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .body("File operation failed"+ ex.getMessage());
     }
 
 

@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
@@ -18,7 +21,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/admin/categories/{categoryId}/product")
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody Product product,
+    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO product,
                                                  @PathVariable Long categoryId){
         ProductDTO productDTO = productService.addProduct(product,categoryId);
 
@@ -42,5 +45,24 @@ public class ProductController {
         ProductResponse response  = productService.searchByKeyword(keyword);
         return new ResponseEntity<>(response,HttpStatus.FOUND);
     }
+    @PutMapping("/admin/products/{ProductId}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long ProductId, @RequestBody ProductDTO product){
+        ProductDTO productDTO = productService.updateProduct(ProductId,product);
+        return new ResponseEntity<>(productDTO,HttpStatus.OK);
+    }
+
+    @DeleteMapping ("/admin/products/{ProductId}")
+    public ResponseEntity<ProductDTO> deleteProduct(@PathVariable Long ProductId){
+        ProductDTO productDTO = productService.deleteProduct(ProductId);
+        return new ResponseEntity<>(productDTO,HttpStatus.OK);
+    }
+
+    @PutMapping("/admin/{productId}/image")
+    public ResponseEntity<ProductDTO> uploadProductImage(@PathVariable Long productId, @RequestParam("image")MultipartFile  image) throws IOException {
+
+        ProductDTO updatedproduct = productService.updateProductImage(productId,image);
+        return new ResponseEntity<>(updatedproduct,HttpStatus.OK);
+    }
+
 
 }

@@ -11,8 +11,15 @@ import com.ecommerce.sb.payload.ProductResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductServiceimpl implements ProductService{
@@ -24,7 +31,9 @@ public class ProductServiceimpl implements ProductService{
     private ModelMapper modelMapper;
 
     @Override
-    public ProductDTO addProduct(Product product, Long categoryId) {
+    public ProductDTO addProduct(ProductDTO product1, Long categoryId) {
+
+        Product product =modelMapper.map(product1,Product.class);
 
         Category category  = categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new ResourceNotFoundException("category not found with categoryId "+categoryId));
@@ -44,7 +53,7 @@ public class ProductServiceimpl implements ProductService{
 
         List<Product> products = productRepository.findAll();
         if (products.isEmpty()) {
-            throw new ResourceNotFoundException("no categoreiss");
+            throw new ResourceNotFoundException("NO products");
         }
         List<ProductDTO> productDTOList = products.stream().map(product -> modelMapper.map(product,ProductDTO.class)).toList();
 
@@ -84,5 +93,53 @@ public class ProductServiceimpl implements ProductService{
             productResponse.setContent(productDTOList);
 
             return productResponse;
+    }
+
+    @Override
+    public ProductDTO updateProduct(Long productId,ProductDTO product1) {
+
+        Product product = modelMapper.map(product1,Product.class);
+
+        Product savedproduct = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("product not found to replace"));
+
+       savedproduct.setProductName(product.getProductName());
+       savedproduct.setPrice(product.getPrice());
+       savedproduct.setDiscount(product.getDiscount());
+       savedproduct.setQuantity(product.getQuantity());
+       savedproduct.setDescription(product.getDescription());
+       savedproduct.setSpecialPrice(product.getSpecialPrice());
+
+       productRepository.save(savedproduct);
+
+        return modelMapper.map(savedproduct,ProductDTO.class);
+    }
+
+    @Override
+    public ProductDTO deleteProduct(Long productId) {
+        Product savedproduct = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("product not found to replace"));
+
+        productRepository.delete(savedproduct);
+        return modelMapper.map(savedproduct,ProductDTO.class);
+
+    }
+
+    @Override
+    public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
+
+        Product savedproduct = productRepository.findById(productId)
+                .orElseThrow(()->new ResourceNotFoundException("product not found"));
+
+         String filename = UUID.randomUUID() + "_" + image.getOriginalFilename();
+         Path path = Paths.get("uploads/",filename);
+
+        Files.createDirectory(path.getParent());
+        image.transferTo(path);
+
+        savedproduct.setImage(filename);
+        productRepository.save(savedproduct);
+
+        return modelMapper.map(savedproduct,ProductDTO.class);
     }
 }
