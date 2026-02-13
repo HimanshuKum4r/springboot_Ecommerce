@@ -43,8 +43,10 @@ public class MyGlobalExceptionHandler {
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<String> IOException(IOException ex){
+        ex.printStackTrace();
+
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .body("File operation failed"+ ex.getMessage());
+              .body("File operation failed "+ ex.getMessage());
     }
 
 

@@ -17,5 +17,10 @@ public class ProductResponse {
 
     Optional<Category> category;
 
+    private Integer pageNumber;
+    private Integer pageSize;
+    private Long Totalelements;
+    private Integer Totalpages;
+    private Boolean lastpage;
 
 }
