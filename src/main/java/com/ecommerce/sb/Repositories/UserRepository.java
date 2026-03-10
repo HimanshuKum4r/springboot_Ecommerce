@@ -1,6 +1,9 @@
 package com.ecommerce.sb.Repositories;
 
 import com.ecommerce.sb.model.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository  extends JpaRepository<User,Long> {
-     Optional<User> findByUsername(String username);
+     Optional<User> findByUserName(String userName);
+
+    boolean existsByUserName(@NotBlank @Size(min = 3,max = 20) String userName);
+
+    boolean existsByEmail(@NotBlank @Size(max=30) @Email String email);
 }

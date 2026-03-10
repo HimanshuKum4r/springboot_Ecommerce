@@ -1,5 +1,6 @@
 package com.ecommerce.sb.security.jwt;
 
+import com.ecommerce.sb.security.services.UserDetailServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ public class AuthTokenFIlter extends OncePerRequestFilter {
     @Autowired
     private  JwtUtils jwtutils;
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailServiceImpl userDetailsService;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFIlter.class);
 
@@ -51,7 +52,7 @@ public class AuthTokenFIlter extends OncePerRequestFilter {
     }
 
     private String ParseJwt(HttpServletRequest request) {
-        String jwt = jwtutils.getJwtFromHeader(request);
+        String jwt = jwtutils.getJwtFromCookies(request);
         logger.debug("AuthTokenFilter.java:{}",jwt);
         return jwt;
     }
