@@ -42,7 +42,7 @@ public class AuthController {
     @Autowired
     RoleRepository roleRepository;
 
-     @PostMapping("/signin/")
+     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest){
          Authentication authentication;
          try{
@@ -73,7 +73,7 @@ public class AuthController {
      }
 
 
-    @PostMapping("/signup/")
+    @PostMapping("/signup")
      public ResponseEntity<?> registerUser(@Valid @RequestBody  SignupRequest signupRequest){
 
          if(userRepository.existsByUserName(signupRequest.getUsername())){
@@ -153,5 +153,16 @@ public class AuthController {
         return ResponseEntity.ok().body(loginResponse);
 
     }
+    @PostMapping("/signout")  // thiss cookie overrides the previous one
+    public ResponseEntity<?> signoutUser(){
+         ResponseCookie cookie =  jwtUtils.getCleanJwtCookie();
+         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,cookie.toString())
+                 .body(new MessageResponse("You've been signed out"));
+
+
+
+    }
+
+
 
 }
