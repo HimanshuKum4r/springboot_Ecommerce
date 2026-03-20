@@ -9,11 +9,16 @@ import com.ecommerce.sb.model.Cart;
 import com.ecommerce.sb.model.CartItem;
 import com.ecommerce.sb.model.Product;
 import com.ecommerce.sb.payload.CartDTO;
+import com.ecommerce.sb.payload.ProductDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+
 @Service
 public class CartServiceImpl implements CartService {
     @Autowired
@@ -24,6 +29,8 @@ public class CartServiceImpl implements CartService {
     AuthUtil authUtil;
     @Autowired
     CartItemRepository cartItemRepository;
+    @Autowired
+    ModelMapper modelMapper;
 
     @Override
     public CartDTO addProduct(Long productId, Integer quantity) {
@@ -57,6 +64,19 @@ public class CartServiceImpl implements CartService {
 
         cart.setTotalPrice(cart.getTotalPrice()+ (product.getSpecialPrice()*quantity));
         cartRepository.save(cart);
+
+        CartDTO cartDTO = modelMapper.map(cart,CartDTO.class);
+        List<CartItem> cartItems = cart.getProducts();
+
+        Stream<ProductDTO> productDTOStream = cartItems.stream().map(item-> {
+            ProductDTO map = modelMapper.map(item.getProduct(),ProductDTO.class);
+            map.setQuantity(item.getQuantity() );
+            return map;
+        });
+        cartDTO.setProducts(productDTOStream.toList());
+
+        return cartDTO;
+
 
 
 
