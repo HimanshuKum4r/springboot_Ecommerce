@@ -20,6 +20,10 @@ public class APIException extends RuntimeException{
         this.status = status;
     }
 
+    public APIException(String message) {
+        super(message);
+    }
+
     public HttpStatus getStatus() {
         return status;
     }
