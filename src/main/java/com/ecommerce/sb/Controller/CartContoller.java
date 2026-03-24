@@ -58,12 +58,12 @@ public class CartContoller {
 
     }
 
-    @DeleteMapping
+    @DeleteMapping("/carts/{cartId}/product/{productId}")
     public ResponseEntity<String> deleteProductFromCart(@PathVariable Long cartId,
                                                         @PathVariable Long productId){
         String status = cartService.deleteProductFromCart(cartId,productId);
 
-        return ResponseEntity.ok().body(status);
+        return new ResponseEntity<String>(status,HttpStatus.OK);
     }
 
 }
