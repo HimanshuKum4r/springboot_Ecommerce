@@ -23,7 +23,7 @@ public class Address {
     private Long addressId;
     @NotBlank
     @Size(min =5 , message = "must be atleast 5 characters")
-    private String Street;
+    private String street;
     @NotBlank
     @Size(min =5 , message = "buildingname be atleast 5 characters")
     private String buildingName;
@@ -34,17 +34,19 @@ public class Address {
     @Size(min =2 , message = "statename must be atleast 2 characters")
     private String state;
     @NotBlank
-    @Size(min =6 , message = "pincode must be atleast 6 characters")
-    private Integer pincode;
+    @Size(min =5 , message = "pincode must be atleast 6 characters")
+    private String pincode;
     @NotBlank
     @Size(min =2, message = "country must be atleast 2 characters")
     private String country;
 
-    @ManyToMany(mappedBy = "addresses")
-    private List<User> users = new ArrayList<>();
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public Address(String street, String buildingName, String city, String state, Integer pincode, String country) {
-        Street = street;
+    public Address(String street, String buildingName, String city, String state, String pincode, String country) {
+        street = street;
         this.buildingName = buildingName;
         this.city = city;
         this.state = state;
