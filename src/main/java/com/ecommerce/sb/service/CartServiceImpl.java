@@ -90,7 +90,11 @@ public class CartServiceImpl implements CartService {
 
         List<CartDTO> cartDTOS = carts.stream().map(cart -> {
             CartDTO cartDTO = modelMapper.map(cart,CartDTO.class);
-            List<ProductDTO> products = cart.getProducts().stream().map(p-> modelMapper.map(p.getProduct(),ProductDTO.class)).toList();
+            List<ProductDTO> products = cart.getProducts().stream().map(p-> {
+                ProductDTO productDTO = modelMapper.map(p.getProduct(),ProductDTO.class);
+                productDTO.setQuantity(p.getQuantity());
+                return productDTO;
+            }).toList();
             cartDTO.setProducts(products);
             return cartDTO;
         }).toList();
@@ -107,7 +111,11 @@ public class CartServiceImpl implements CartService {
             throw new ResourceNotFoundException("cart is empty " ,cartId);
         }
         CartDTO cartDTO = modelMapper.map(cart,CartDTO.class);
-        List<ProductDTO> productDTOList  = cart.getProducts().stream().map(p-> modelMapper.map(p.getProduct(),ProductDTO.class)).toList();
+        List<ProductDTO> productDTOList  = cart.getProducts().stream().map(p-> {
+            ProductDTO productDTO = modelMapper.map(p.getProduct(),ProductDTO.class);
+            productDTO.setQuantity(p.getQuantity());
+            return productDTO;
+        }).toList();
         cartDTO.setProducts(productDTOList);
         return cartDTO;
     }
