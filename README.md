@@ -6,11 +6,12 @@ role-based authorization, DTO architecture, and PostgreSQL integration.Built as 
 #Features
 
 JWT authentication using HTTP-only cookies
+Global Exception handler handles all buisness logic error centrally
 Role-based authorization (USER, ADMIN)
 Pagination and sorting support
 DTO-based request and response handling
 RESTful APIs for product, cart, order, and user management
-Global exception handling
+Custom validators and inbuilt
 
 #Tech Stack
 
